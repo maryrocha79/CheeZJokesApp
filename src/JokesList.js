@@ -14,18 +14,21 @@ class JokesList extends Component {
 
   async componentDidMount() {
     try {
-      const promises = Array.from({ length: 5 }).map(async j => {
+      const promises = Array.from({ length: 20 }).map((j, idx) => {
         // request details from  API with axios
-        const response = await axios('https://icanhazdadjoke.com/', {
+        const response = axios('https://icanhazdadjoke.com/', {
           headers: { Accept: 'application/json' }
-        });
+        }).then(res => {
+          console.log(idx);
 
-        return {
-          joke: response.data.joke,
-          id: response.data.id,
-          upVote: '',
-          downVote: ''
-        };
+          return {
+            joke: res.data.joke,
+            id: res.data.id,
+            upVote: '',
+            downVote: ''
+          };
+        });
+        return response;
       });
 
       const results = await Promise.all(promises);
@@ -39,7 +42,6 @@ class JokesList extends Component {
         }
         return j;
       });
-      //=================
 
       this.setState({
         allJokes: uniqueResults,
@@ -54,20 +56,24 @@ class JokesList extends Component {
     this.setState({
       loadingMessage: 'Loading....'
     });
-    const promises = Array.from({ length: 5 }).map(async j => {
-      const response = await axios('https://icanhazdadjoke.com/', {
+    const promises = Array.from({ length: 20 }).map((j, idx) => {
+      // request details from  API with axios
+      const response = axios('https://icanhazdadjoke.com/', {
         headers: { Accept: 'application/json' }
-      });
+      }).then(res => {
+        console.log(idx);
 
-      return {
-        joke: response.data.joke,
-        id: response.data.id,
-        upVote: '',
-        downVote: ''
-      };
+        return {
+          joke: res.data.joke,
+          id: res.data.id,
+          upVote: '',
+          downVote: ''
+        };
+      });
+      return response;
     });
     const newResults = await Promise.all(promises);
-    //===========
+
     let idxs = new Set();
     let uniqueResults = [];
     newResults.map(j => {
@@ -77,7 +83,6 @@ class JokesList extends Component {
       }
       return j;
     });
-    //=================
 
     this.setState({
       allJokes: uniqueResults,
