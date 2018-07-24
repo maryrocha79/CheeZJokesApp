@@ -12,6 +12,13 @@ class JokesList extends Component {
     };
   }
 
+  componentWillMount() {
+    localStorage.getItem('allJokes') &&
+      this.setState({
+        allJokes: JSON.parse(localStorage.getItem('allJokes')),
+        loadingMessage: ''
+      });
+  }
   async componentDidMount() {
     try {
       const promises = Array.from({ length: 20 }).map((j, idx) => {
@@ -50,6 +57,13 @@ class JokesList extends Component {
     } catch (err) {
       return console.log(err);
     }
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    let filteredJokes = [];
+
+    localStorage.setItem('allJokes', JSON.stringify(nextState.allJokes));
+    localStorage.setItem('allJokesDate', Date.now());
   }
 
   handleClick = async () => {
